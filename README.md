@@ -21,16 +21,21 @@
 
 ```text
 github-project-radar/
+├── index.html               # 官方單頁網站 (整合新手指南、開發筆記與互動指令器)
 ├── SKILL.md                 # Antigravity 技能主說明與工作流引導
 ├── AGENTS.md                # 通用跨 Agent 規則規範 (Claude/Cursor/Windsurf 相容)
 ├── USER_GUIDE.md            # 小白超新手使用指南 (說人話免代碼說明書)
+├── DEVELOPER_NOTES.md       # 業界開發筆記 (架構演進、設計哲學與踩坑復盤)
 ├── README.md                # 專案說明文件
+├── LICENSE                  # MIT 開源授權條款
 ├── .env.example             # GitHub Token 配置範本
 ├── .gitignore               # 敏感憑證與快取忽略規則
 ├── install.ps1              # Windows PowerShell 全域安裝腳本
 ├── uninstall.ps1            # Windows PowerShell 全域解除安裝腳本
+├── 一鍵推送到GitHub.bat     # Windows 雙擊極速推送腳本
 ├── scripts/
-│   └── search_github.py     # 零依賴核心探測與深探腳本 (支援自訂查詢、目錄樹、依賴透視與克隆指引)
+│   ├── search_github.py     # 零依賴核心探測與深探腳本 (支援自訂查詢、目錄樹、依賴透視與克隆指引)
+│   └── push_github.ps1      # PowerShell GitHub 推送核心模組
 ├── tests/
 │   └── test_radar.py        # 零依賴單元測試套件
 └── references/
