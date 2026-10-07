@@ -1,0 +1,29 @@
+# Environment and Token credentials
+.env
+.env.*
+*.token
+.github_radar_token
+.github_token
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# OS and Editor metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Local samples, snapshots and temporary test downloads
+ponytail-*/
+samples/
+cache/
+scratch/
+*.zip
+*.tar.gz
+*.tar
