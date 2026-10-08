@@ -11,24 +11,11 @@ Write-Host "🚀 正在將 GitHub Project Radar 安裝至 Antigravity 全域技�
 Write-Host "來源目錄: $SourceDir"
 Write-Host "目標目錄: $TargetDir"
 
-if (-not (Test-Path $GlobalSkillsDir)) {
-    New-Item -ItemType Directory -Path $GlobalSkillsDir -Force | Out-Null
-}
-
-# 若目標已存在，先備份或移除
-if (Test-Path $TargetDir) {
-    Write-Host "偵測到已存在的安裝，正在更新覆蓋..." -ForegroundColor Yellow
-    Remove-Item -Path $TargetDir -Recurse -Force
-}
-
-# 建立目錄並複製檔案
+# 建立目標目錄並複製技能檔案
 New-Item -ItemType Directory -Path $TargetDir -Force | Out-Null
-Copy-Item -Path (Join-Path $SourceDir "SKILL.md") -Destination $TargetDir -Force
-if (Test-Path (Join-Path $SourceDir "AGENTS.md")) {
-    Copy-Item -Path (Join-Path $SourceDir "AGENTS.md") -Destination $TargetDir -Force
-}
-if (Test-Path (Join-Path $SourceDir ".env.example")) {
-    Copy-Item -Path (Join-Path $SourceDir ".env.example") -Destination $TargetDir -Force
+@("SKILL.md", "AGENTS.md", ".env.example") | ForEach-Object {
+    $src = Join-Path $SourceDir $_
+    if (Test-Path $src) { Copy-Item -Path $src -Destination $TargetDir -Force }
 }
 Copy-Item -Path (Join-Path $SourceDir "scripts") -Destination $TargetDir -Recurse -Force
 Copy-Item -Path (Join-Path $SourceDir "references") -Destination $TargetDir -Recurse -Force

@@ -18,64 +18,34 @@ import urllib.parse
 import urllib.error
 import re
 import time
-from html.parser import HTMLParser
-
-# 1. Windows Terminal UTF-8 Safety (Prevents CP950 / charmap UnicodeEncodeError)
+# 1. Windows Terminal UTF-8 Safety
 if sys.platform.startswith("win"):
-    if hasattr(sys.stdout, "reconfigure"):
+    for stream in (sys.stdout, sys.stderr):
         try:
-            sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-        except Exception:
-            pass
-    if hasattr(sys.stderr, "reconfigure"):
-        try:
-            sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+            stream.reconfigure(encoding="utf-8", errors="replace")
         except Exception:
             pass
 
 
 def resolve_token(token=None):
-    """
-    Resolve GitHub token from multiple sources in priority order:
-    1. CLI argument `--token`
-    2. Environment variable `GITHUB_TOKEN`
-    3. Local `.env` file (current working directory or script directory)
-    4. User home config file (~/.github_radar_token or ~/.github_token)
-    """
+    """Resolve GitHub token from CLI argument, environment variable, or local .env file."""
     if token:
         return token.strip()
 
-    # 1. Environment variable
     env_token = os.environ.get("GITHUB_TOKEN")
     if env_token:
         return env_token.strip()
 
-    # 2. Check .env files in CWD and script folder
-    search_dirs = [os.getcwd(), os.path.dirname(os.path.abspath(__file__))]
-    for d in search_dirs:
+    for d in (os.getcwd(), os.path.dirname(os.path.abspath(__file__))):
         env_path = os.path.join(d, ".env")
         if os.path.isfile(env_path):
             try:
                 with open(env_path, "r", encoding="utf-8", errors="ignore") as f:
                     for line in f:
-                        line = line.strip()
-                        if line.startswith("GITHUB_TOKEN="):
-                            val = line.split("=", 1)[1].strip().strip('"').strip("'")
+                        if line.strip().startswith("GITHUB_TOKEN="):
+                            val = line.strip().split("=", 1)[1].strip().strip('"').strip("'")
                             if val:
                                 return val
-            except Exception:
-                pass
-
-    # 3. Check user home config files
-    home = os.path.expanduser("~")
-    for fname in [".github_radar_token", ".github_token"]:
-        token_path = os.path.join(home, fname)
-        if os.path.isfile(token_path):
-            try:
-                with open(token_path, "r", encoding="utf-8", errors="ignore") as f:
-                    val = f.read().strip()
-                    if val:
-                        return val
             except Exception:
                 pass
 
@@ -414,90 +384,36 @@ def fetch_repo_info(owner_repo, token=None):
     return result
 
 
-class TrendingHTMLParser(HTMLParser):
-    """Robust lightweight parser to extract repos from github.com/trending."""
-    def __init__(self):
-        super().__init__()
-        self.repos = []
-        self.current_repo = {}
-        self.in_article = False
-        self.in_h2 = False
-        self.in_desc = False
-        self.in_lang = False
-        self.depth_in_article = 0
-
-    def handle_starttag(self, tag, attrs):
-        attr_dict = dict(attrs)
-        classes = attr_dict.get("class", "").split()
-
-        if tag == "article" or (tag in ("div", "li") and any("Box-row" in c for c in classes)):
-            self.in_article = True
-            self.depth_in_article = 1
-            self.current_repo = {"stars_today": "", "description": "", "language": "", "stars": "", "forks": ""}
-        elif self.in_article:
-            self.depth_in_article += 1
-
-        if self.in_article:
-            if tag in ("h1", "h2", "h3"):
-                self.in_h2 = True
-            elif tag == "a" and self.in_h2:
-                href = attr_dict.get("href", "").strip()
-                parts = [p for p in href.strip("/").split("/") if p]
-                if len(parts) == 2 and not self.current_repo.get("full_name"):
-                    repo_path = f"{parts[0]}/{parts[1]}"
-                    self.current_repo["full_name"] = repo_path
-                    self.current_repo["url"] = f"https://github.com/{repo_path}"
-            elif tag in ("p", "div") and (any("col-9" in c for c in classes) or "description" in attr_dict.get("class", "")):
-                self.in_desc = True
-            elif tag == "span" and attr_dict.get("itemprop") == "programmingLanguage":
-                self.in_lang = True
-
-    def handle_endtag(self, tag):
-        if self.in_article:
-            self.depth_in_article -= 1
-            if tag in ("h1", "h2", "h3"):
-                self.in_h2 = False
-            elif tag in ("p", "div") and self.in_desc:
-                self.in_desc = False
-            elif tag == "span" and self.in_lang:
-                self.in_lang = False
-
-            if tag == "article" or self.depth_in_article <= 0:
-                self.in_article = False
-                if self.current_repo.get("full_name"):
-                    self.repos.append(self.current_repo)
-                self.current_repo = {}
-
-    def handle_data(self, data):
-        text = data.strip()
-        if not text:
-            return
-        if self.in_desc:
-            prev = self.current_repo.get("description", "")
-            self.current_repo["description"] = (prev + " " + text).strip()
-        elif self.in_lang:
-            self.current_repo["language"] = text
-        elif any(k in text.lower() for k in ("stars today", "stars this week", "stars this month")):
-            self.current_repo["stars_today"] = text
-
-
-def regex_fallback_trending(html):
-    """Regex fallback to extract repos if HTML structure changes."""
+def parse_trending_html(html):
+    """Parse repository cards from github.com/trending page."""
     repos = []
-    pattern = re.compile(r'<h[12][^>]*>\s*<a[^>]*href=["\']/([a-zA-Z0-9_\-\.]+/[a-zA-Z0-9_\-\.]+)["\']', re.IGNORECASE)
-    matches = pattern.findall(html)
-    seen = set()
-    for repo_path in matches:
-        if repo_path in seen or "/" not in repo_path:
+    articles = re.findall(r'<article[^>]*class="[^"]*Box-row[^"]*"[^>]*>(.*?)</article>', html, re.DOTALL)
+    for art in articles:
+        m_name = re.search(r'<h[123][^>]*>\s*<a[^>]*href=["\']/([a-zA-Z0-9_\-\.]+/[a-zA-Z0-9_\-\.]+)["\']', art)
+        if not m_name:
             continue
-        seen.add(repo_path)
+        repo = m_name.group(1).strip()
+        m_desc = re.search(r'<p[^>]*class="[^"]*col-9[^"]*"[^>]*>(.*?)</p>', art, re.DOTALL) or re.search(r'<p[^>]*>(.*?)</p>', art, re.DOTALL)
+        desc = re.sub(r'<[^>]+>', '', m_desc.group(1)).strip() if m_desc else "無描述"
+        m_lang = re.search(r'itemprop="programmingLanguage"[^>]*>([^<]+)<', art)
+        lang = m_lang.group(1).strip() if m_lang else "N/A"
+        m_stars = re.search(r'([0-9,]+\s+stars\s+(?:today|this week|this month))', art, re.IGNORECASE)
+        stars_today = m_stars.group(1).strip() if m_stars else "Trending"
         repos.append({
-            "full_name": repo_path,
-            "url": f"https://github.com/{repo_path}",
-            "description": "Trending 開源專案",
-            "language": "N/A",
-            "stars_today": "Trending"
+            "full_name": repo,
+            "url": f"https://github.com/{repo}",
+            "description": desc,
+            "language": lang,
+            "stars_today": stars_today
         })
+
+    if not repos:
+        pattern = re.compile(r'<h[123][^>]*>\s*<a[^>]*href=["\']/([a-zA-Z0-9_\-\.]+/[a-zA-Z0-9_\-\.]+)["\']', re.IGNORECASE)
+        seen = set()
+        for r in pattern.findall(html):
+            if r not in seen and "/" in r:
+                seen.add(r)
+                repos.append({"full_name": r, "url": f"https://github.com/{r}", "description": "Trending 開源專案", "language": "N/A", "stars_today": "Trending"})
     return repos
 
 
@@ -513,11 +429,7 @@ def fetch_trending(language="", since="daily", token=None, limit=10):
     try:
         status, _, html = execute_request_with_retry(req, timeout=12)
         if status == 200:
-            parser = TrendingHTMLParser()
-            parser.feed(html)
-            repos = parser.repos
-            if not repos:
-                repos = regex_fallback_trending(html)
+            repos = parse_trending_html(html)
             if repos:
                 return repos
     except Exception as e:
@@ -676,20 +588,23 @@ def format_compare_markdown(details):
     rows.append(["**最近代碼推送 (Pushed)**"] + [f"`{d['pushed_at']}`" for d in valid_details])
     rows.append(["**專案建立時間**"] + [f"`{d['created_at']}`" for d in valid_details])
     # 5. Release
-    def get_rel_str(d):
-        r = d.get("latest_release")
-        return f"`{r['tag_name']}` ({r['published_at']})" if r else "未發布 Release"
-    rows.append(["**最新發布版本**"] + [get_rel_str(d) for d in valid_details])
+    rows.append(["**最新發布版本**"] + [
+        f"`{d['latest_release']['tag_name']}` ({d['latest_release']['published_at']})" if d.get("latest_release") else "未發布 Release"
+        for d in valid_details
+    ])
     # 6. Status
     rows.append(["**維護狀態**"] + [("⚠️ 唯讀封存 (Archived)" if d.get("archived") else "🌱 活躍維護中") for d in valid_details])
     # 7. Health Checklist
-    def check_icon(d, key):
-        has = d.get("structure", {}).get("health_checklist", {}).get(key, False)
-        return "✅ 有" if has else "❌ 無"
-    rows.append(["**🧪 單元測試 (`tests/`)**"] + [check_icon(d, "has_tests") for d in valid_details])
-    rows.append(["**📚 開發文件 (`docs/`)**"] + [check_icon(d, "has_docs") for d in valid_details])
-    rows.append(["**💡 範例程式 (`examples/`)**"] + [check_icon(d, "has_examples") for d in valid_details])
-    rows.append(["**⚡ 自動化 CI/CD (`.github/`)**"] + [check_icon(d, "has_ci_cd") for d in valid_details])
+    for label, key in [
+        ("**🧪 單元測試 (`tests/`)**", "has_tests"),
+        ("**📚 開發文件 (`docs/`)**", "has_docs"),
+        ("**💡 範例程式 (`examples/`)**", "has_examples"),
+        ("**⚡ 自動化 CI/CD (`.github/`)**", "has_ci_cd")
+    ]:
+        rows.append([label] + [
+            "✅ 有" if d.get("structure", {}).get("health_checklist", {}).get(key) else "❌ 無"
+            for d in valid_details
+        ])
     # 8. Agent config
     rows.append(["**🤖 Agent 規範適配**"] + [", ".join(d.get("structure", {}).get("agent_configs", [])) or "—" for d in valid_details])
     # 9. Dependencies
@@ -833,21 +748,16 @@ def main():
     items = search_github_api(query=query, sort=args.sort, order="desc", per_page=args.limit, token=args.token)
 
     if args.json:
-        simplified = []
-        for it in items:
-            simplified.append({
-                "name": it.get("name"),
-                "full_name": it.get("full_name"),
-                "html_url": it.get("html_url"),
-                "description": it.get("description"),
-                "language": it.get("language"),
-                "stars": it.get("stargazers_count"),
-                "forks": it.get("forks_count"),
-                "open_issues": it.get("open_issues_count"),
-                "created_at": (it.get("created_at") or "")[:10],
-                "pushed_at": (it.get("pushed_at") or "")[:10],
-                "topics": it.get("topics", [])
-            })
+        fields = ("name", "full_name", "html_url", "description", "language", "topics")
+        simplified = [
+            {**{k: it.get(k) for k in fields},
+             "stars": it.get("stargazers_count"),
+             "forks": it.get("forks_count"),
+             "open_issues": it.get("open_issues_count"),
+             "created_at": (it.get("created_at") or "")[:10],
+             "pushed_at": (it.get("pushed_at") or "")[:10]}
+            for it in items
+        ]
         out_str = json.dumps(simplified, ensure_ascii=False, indent=2)
     else:
         out_str = format_markdown(items, is_api=True)
