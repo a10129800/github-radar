@@ -16,7 +16,10 @@
 * 📉 **主腳本代碼精簡**：[`scripts/search_github.py`](scripts/search_github.py) 從 860 行縮減至 **770 行（淨減 90 行，-10.5%）**。
 * 📉 **安裝腳本精簡**：[`install.ps1`](install.ps1) 從 38 行縮減至 **25 行（淨減 13 行，-34.2%）**。
 * 🛡️ **維持 0 依賴**：100% 純 Python 標準函式庫，完全免 `pip install`，開箱即跑。
-* 📄 **詳細工作報告**：完整重構紀錄與量化成效請參見 ➔ **[今日優化總結報告 (線上直接閱讀)](daily_report_2026_10_08.md)** *(亦可下載 [A4 / PDF 列印版](daily_report_2026_10_08.html))*
+* 📄 **詳細工作報告與展示**：
+  * 🌐 **[官方首頁 Web 版 (index.html)](index.html)** — 精美互動卡片、指令產生器與可展開報告全文
+  * 📄 **[今日優化總結報告 (GitHub 線上直閱版)](daily_report_2026_10_08.md)** — GitHub 原生 Markdown 排版，點擊直接看
+  * 🖨️ **[A4 / PDF 列印下載版 (HTML)](daily_report_2026_10_08.html)** — 支援 Ctrl+P 一鍵匯出正式工程彙報 PDF
 
 ---
 

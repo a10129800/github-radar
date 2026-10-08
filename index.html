@@ -645,6 +645,11 @@
       .hero h1 { font-size: 34px; }
       .output-bar { flex-direction: column; align-items: stretch; }
     }
+
+    @keyframes fadeInReport {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
@@ -658,6 +663,7 @@
       </a>
       <div class="header-links">
         <a href="#features" class="btn-nav">核心特色</a>
+        <a href="#lean-upgrade" class="btn-nav" style="border-color: rgba(56, 189, 248, 0.4); color: #38bdf8; background: rgba(56, 189, 248, 0.08);">🌿 瘦身升級報告</a>
         <a href="#showcase" class="btn-nav">成果預覽</a>
         <a href="#playbox" class="btn-nav btn-primary">⚡ 立即玩玩看</a>
       </div>
@@ -673,6 +679,226 @@
         GitHub 上有幾億個專案，但 <strong>90% 都是過期沒維護的殭屍，或是只有 README 吹牛的空殼</strong>。<br>
         這個開源雷達專門幫你做兩件事：<strong>挖出剛竄起的高潛力新星</strong>，以及<strong>像照 X 光一樣秒速識破空殼專案</strong>。
       </p>
+    </section>
+
+    <!-- 2026-10 LEAN UPGRADE BANNER & REPORT SECTION -->
+    <section class="lean-upgrade-section" id="lean-upgrade" style="margin: 20px 0 60px;">
+      <div style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(7, 10, 18, 0.95)); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: var(--radius-lg); padding: 36px 32px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); position: relative; overflow: hidden;">
+        <div style="position: absolute; top: -50px; right: -50px; width: 220px; height: 220px; background: radial-gradient(circle, rgba(56, 189, 248, 0.15), transparent 70%); pointer-events: none;"></div>
+        
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
+          <div>
+            <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; padding: 4px 12px; border-radius: 999px; font-size: 12.5px; font-weight: 700; margin-bottom: 12px;">
+              <span>🌟</span> 2026-10 工程升級成就公布
+            </div>
+            <h2 style="font-family: var(--font-display); font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 8px;">
+              全面導入 Ponytail 4.12.0 極簡架構 · 核心腳本淨減 90 行！
+            </h2>
+            <p style="color: var(--text-muted); font-size: 14.5px; max-width: 680px; margin: 0;">
+              遵循資深極簡工程師規範（YAGNI、標準函式庫優先），對全專案實施嚴格瘦身。徹底消除雙層爬蟲與過度抽象，<b>在維持 100% 零依賴（0-dependency）與全部測試相容</b>的前提下，代碼更簡潔、速度更飛快！
+            </p>
+          </div>
+
+          <!-- 按鈕群組 -->
+          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <button id="btn-toggle-report" onclick="toggleFullReport()" style="display: inline-flex; align-items: center; gap: 8px; background: #38bdf8; color: #000; border: none; padding: 10px 18px; border-radius: 8px; font-size: 13.5px; font-weight: 700; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.filter='brightness(1.15)'" onmouseout="this.style.filter='none'">
+              <span>📖</span> <span id="toggle-report-text">展開本頁完整報告</span>
+            </button>
+            <a href="daily_report_2026_10_08.md" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #fff; text-decoration: none; padding: 10px 18px; border-radius: 8px; font-size: 13.5px; font-weight: 600; transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">
+              <span>📄</span> Markdown 線上版
+            </a>
+            <a href="daily_report_2026_10_08.html" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #fff; text-decoration: none; padding: 10px 18px; border-radius: 8px; font-size: 13.5px; font-weight: 600; transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">
+              <span>🖨️</span> A4 / PDF 列印版
+            </a>
+          </div>
+        </div>
+
+        <!-- 四大數據看板 -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 24px;">
+          <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 12px; padding: 16px; text-align: center;">
+            <div style="font-family: var(--font-mono); font-size: 28px; font-weight: 800; color: #38bdf8;">-90 行</div>
+            <div style="font-size: 13px; font-weight: 600; color: #e2e8f0; margin-top: 2px;">主探測腳本精簡</div>
+            <div style="font-size: 11.5px; color: #94a3b8; margin-top: 4px;">860 行 ➔ 770 行 (-10.5%)</div>
+          </div>
+          <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 12px; padding: 16px; text-align: center;">
+            <div style="font-family: var(--font-mono); font-size: 28px; font-weight: 800; color: #34d399;">-13 行</div>
+            <div style="font-size: 13px; font-weight: 600; color: #e2e8f0; margin-top: 2px;">PowerShell 腳本精簡</div>
+            <div style="font-size: 11.5px; color: #94a3b8; margin-top: 4px;">38 行 ➔ 25 行 (-34.2%)</div>
+          </div>
+          <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 12px; padding: 16px; text-align: center;">
+            <div style="font-family: var(--font-mono); font-size: 28px; font-weight: 800; color: #818cf8;">0 Deps</div>
+            <div style="font-size: 13px; font-weight: 600; color: #e2e8f0; margin-top: 2px;">第三方依賴性</div>
+            <div style="font-size: 11.5px; color: #94a3b8; margin-top: 4px;">100% 純 Python 標準庫</div>
+          </div>
+          <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 12px; padding: 16px; text-align: center;">
+            <div style="font-family: var(--font-mono); font-size: 28px; font-weight: 800; color: #34d399;">100%</div>
+            <div style="font-size: 13px; font-weight: 600; color: #e2e8f0; margin-top: 2px;">單元測試相容度</div>
+            <div style="font-size: 11.5px; color: #94a3b8; margin-top: 4px;">5/5 項單元測試完全通過</div>
+          </div>
+        </div>
+
+        <!-- 6 大瘦身重點速覽標籤 -->
+        <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.08); display: flex; flex-wrap: wrap; gap: 8px;">
+          <span style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); padding: 5px 12px; border-radius: 6px; font-size: 12.5px; color: #cbd5e1;">✅ 爬蟲解析器合併 (-52 行)</span>
+          <span style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); padding: 5px 12px; border-radius: 6px; font-size: 12.5px; color: #cbd5e1;">✅ Token 探測去冗餘 (-18 行)</span>
+          <span style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); padding: 5px 12px; border-radius: 6px; font-size: 12.5px; color: #cbd5e1;">✅ 對比矩陣代碼扁平化 (-12 行)</span>
+          <span style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); padding: 5px 12px; border-radius: 6px; font-size: 12.5px; color: #cbd5e1;">✅ JSON 清單推導式 (-8 行)</span>
+          <span style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); padding: 5px 12px; border-radius: 6px; font-size: 12.5px; color: #cbd5e1;">✅ UTF-8 防護精簡 (-6 行)</span>
+          <span style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); padding: 5px 12px; border-radius: 6px; font-size: 12.5px; color: #cbd5e1;">✅ 安裝腳本原生化 (-13 行)</span>
+        </div>
+
+        <!-- 完整報告展開區塊 (INLINE FULL REPORT) -->
+        <div id="full-report-container" style="display: none; margin-top: 28px; padding-top: 28px; border-top: 1px dashed rgba(56, 189, 248, 0.35); animation: fadeInReport 0.3s ease;">
+          <div style="background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 28px 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 14px; margin-bottom: 20px;">
+              <div>
+                <h3 style="font-family: var(--font-display); font-size: 20px; font-weight: 800; color: #fff;">📋 2026-10-08 專案優化總結報告全文</h3>
+                <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">執行主題：Ponytail 4.12.0 極簡架構升級與零依賴代碼重構</p>
+              </div>
+              <button onclick="toggleFullReport()" style="background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #94a3b8; padding: 6px 14px; border-radius: 6px; font-size: 12.5px; cursor: pointer;">
+                🔼 收合全文
+              </button>
+            </div>
+
+            <!-- 目標與背景 -->
+            <div style="margin-bottom: 22px;">
+              <h4 style="font-size: 15px; font-weight: 700; color: #38bdf8; margin-bottom: 6px;">🎯 一、執行目標與背景</h4>
+              <p style="font-size: 14px; color: #cbd5e1; line-height: 1.6;">
+                針對 <code>github-project-radar</code> 探測雷達專案全面導入極簡工程標準 <b>Ponytail v4.12.0</b>。利用審查工具全面掃描過度抽象與冗餘代碼，在<b>維持 100% 零外部依賴（純 Python 標準庫）且所有測試完全通過</b>的前提下，實現最高度的程式碼緊湊度與可維護性。
+              </p>
+            </div>
+
+            <!-- 6 大 Ponytail 技能體系 -->
+            <div style="margin-bottom: 22px;">
+              <h4 style="font-size: 15px; font-weight: 700; color: #38bdf8; margin-bottom: 8px;">🛠️ 二、整合 6 大 Ponytail 專案技能規範</h4>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; font-size: 13px;">
+                <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); padding: 10px 12px; border-radius: 8px;">
+                  <b style="color: #fff;">/ponytail</b><br><span style="color: #94a3b8;">極簡工程模式切換（lite/full/ultra）</span>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); padding: 10px 12px; border-radius: 8px;">
+                  <b style="color: #fff;">/ponytail-review</b><br><span style="color: #94a3b8;">Git Diff 變更過度設計專項審查</span>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); padding: 10px 12px; border-radius: 8px;">
+                  <b style="color: #fff;">/ponytail-audit</b><br><span style="color: #94a3b8;">全倉庫程式碼膨脹與抽象體檢</span>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); padding: 10px 12px; border-radius: 8px;">
+                  <b style="color: #fff;">/ponytail-debt</b><br><span style="color: #94a3b8;">極簡捷徑與技術債跟蹤帳本</span>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); padding: 10px 12px; border-radius: 8px;">
+                  <b style="color: #fff;">/ponytail-gain</b><br><span style="color: #94a3b8;">成效基準節省記分板</span>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); padding: 10px 12px; border-radius: 8px;">
+                  <b style="color: #fff;">/ponytail-help</b><br><span style="color: #94a3b8;">極簡模式指令速查卡片</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 重構細節對比表 -->
+            <div style="margin-bottom: 22px;">
+              <h4 style="font-size: 15px; font-weight: 700; color: #38bdf8; margin-bottom: 8px;">📊 三、程式碼極簡化重構實施細節對比</h4>
+              <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: left;">
+                  <thead>
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.15); color: #38bdf8;">
+                      <th style="padding: 10px 8px;">模組 / 檔案</th>
+                      <th style="padding: 10px 8px;">重構前狀態</th>
+                      <th style="padding: 10px 8px;">重構後極簡作法</th>
+                      <th style="padding: 10px 8px; text-align: center;">行數變化</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                      <td style="padding: 10px 8px; font-family: var(--font-mono); color: #fff;">search_github.py</td>
+                      <td style="padding: 10px 8px; color: #94a3b8;">87 行 <code>TrendingHTMLParser</code> 狀態機 + 正規備援</td>
+                      <td style="padding: 10px 8px; color: #cbd5e1;">合併為單一 <code>parse_trending_html</code> 線性提取</td>
+                      <td style="padding: 10px 8px; text-align: center; color: #38bdf8; font-weight: 700;">-52 行</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                      <td style="padding: 10px 8px; font-family: var(--font-mono); color: #fff;">search_github.py</td>
+                      <td style="padding: 10px 8px; color: #94a3b8;">檢查 CLI、環境變數、兩層 .env 外還掃瞄家目錄冷門隱藏檔</td>
+                      <td style="padding: 10px 8px; color: #cbd5e1;">精簡為 CLI ➔ 系統環境變數 ➔ 專案 .env 三層優先級</td>
+                      <td style="padding: 10px 8px; text-align: center; color: #38bdf8; font-weight: 700;">-18 行</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                      <td style="padding: 10px 8px; font-family: var(--font-mono); color: #fff;">search_github.py</td>
+                      <td style="padding: 10px 8px; color: #94a3b8;"><code>format_compare_markdown</code> 巢狀定義多個閉包工具函式</td>
+                      <td style="padding: 10px 8px; color: #cbd5e1;">改用三元表達式與迴圈元組直覺迭代，程式碼完全扁平化</td>
+                      <td style="padding: 10px 8px; text-align: center; color: #38bdf8; font-weight: 700;">-12 行</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                      <td style="padding: 10px 8px; font-family: var(--font-mono); color: #fff;">search_github.py</td>
+                      <td style="padding: 10px 8px; color: #94a3b8;">16 行手動 <code>for</code> 迴圈逐一提取 11 個 dict 鍵值</td>
+                      <td style="padding: 10px 8px; color: #cbd5e1;">使用清單推導式搭配白名單解包鍵值映射</td>
+                      <td style="padding: 10px 8px; text-align: center; color: #38bdf8; font-weight: 700;">-8 行</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                      <td style="padding: 10px 8px; font-family: var(--font-mono); color: #fff;">search_github.py</td>
+                      <td style="padding: 10px 8px; color: #94a3b8;">13 行個別判斷 stdout / stderr 之 reconfigure 屬性</td>
+                      <td style="padding: 10px 8px; color: #cbd5e1;">濃縮為標準輸出串流走訪迴圈</td>
+                      <td style="padding: 10px 8px; text-align: center; color: #38bdf8; font-weight: 700;">-6 行</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 10px 8px; font-family: var(--font-mono); color: #fff;">install.ps1</td>
+                      <td style="padding: 10px 8px; color: #94a3b8;">38 行冗長 <code>Test-Path</code>、前置手動刪除等繁瑣條件</td>
+                      <td style="padding: 10px 8px; color: #cbd5e1;">善用 PowerShell 原生 <code>Copy-Item -Force</code> 直接覆蓋</td>
+                      <td style="padding: 10px 8px; text-align: center; color: #34d399; font-weight: 700;">-13 行</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- 量化成效對比 -->
+            <div style="margin-bottom: 22px;">
+              <h4 style="font-size: 15px; font-weight: 700; color: #38bdf8; margin-bottom: 8px;">📈 四、量化成果總覽</h4>
+              <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: left;">
+                  <thead>
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.15); color: #38bdf8;">
+                      <th style="padding: 8px;">評估指標</th>
+                      <th style="padding: 8px; text-align: center;">重構前</th>
+                      <th style="padding: 8px; text-align: center;">重構後</th>
+                      <th style="padding: 8px;">淨改善成果</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                      <td style="padding: 8px; color: #fff;">Python 主腳本行數</td>
+                      <td style="padding: 8px; text-align: center; color: #94a3b8;">860 行</td>
+                      <td style="padding: 8px; text-align: center; color: #38bdf8; font-weight: 700;">770 行</td>
+                      <td style="padding: 8px; color: #38bdf8;">🔻 減少 90 行 (-10.5%)</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                      <td style="padding: 8px; color: #fff;">PowerShell 安裝腳本</td>
+                      <td style="padding: 8px; text-align: center; color: #94a3b8;">38 行</td>
+                      <td style="padding: 8px; text-align: center; color: #34d399; font-weight: 700;">25 行</td>
+                      <td style="padding: 8px; color: #34d399;">🔻 減少 13 行 (-34.2%)</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                      <td style="padding: 8px; color: #fff;">第三方依賴性</td>
+                      <td style="padding: 8px; text-align: center; color: #94a3b8;">0 個</td>
+                      <td style="padding: 8px; text-align: center; color: #818cf8; font-weight: 700;">0 個</td>
+                      <td style="padding: 8px; color: #818cf8;">✅ 100% 純 Python 標準函式庫</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 8px; color: #fff;">單元測試相容性</td>
+                      <td style="padding: 8px; text-align: center; color: #94a3b8;">5/5 通過</td>
+                      <td style="padding: 8px; text-align: center; color: #34d399; font-weight: 700;">5/5 通過</td>
+                      <td style="padding: 8px; color: #34d399;">✅ 所有指令、參數與輸出 100% 相容</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- 底端操作按鈕 -->
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+              <a href="daily_report_2026_10_08.html" target="_blank" style="background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; text-decoration: none; padding: 7px 16px; border-radius: 6px; font-size: 13px; font-weight: 600;">🖨️ 另開獨立列印分頁</a>
+              <button onclick="toggleFullReport()" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #fff; padding: 7px 16px; border-radius: 6px; font-size: 13px; cursor: pointer;">🔼 收合報告</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- BEFORE VS AFTER 殘酷對照 -->
@@ -1043,6 +1269,33 @@
         toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 2000);
       });
+    }
+
+    // Toggle inline report
+    function toggleFullReport() {
+      const container = document.getElementById('full-report-container');
+      const text = document.getElementById('toggle-report-text');
+      const btn = document.getElementById('btn-toggle-report');
+      if (!container) return;
+
+      const isHidden = (container.style.display === 'none' || container.style.display === '');
+      if (isHidden) {
+        container.style.display = 'block';
+        if (text) text.innerText = '收合本頁報告';
+        if (btn) {
+          btn.style.background = 'rgba(56, 189, 248, 0.2)';
+          btn.style.color = '#38bdf8';
+          btn.style.border = '1px solid rgba(56, 189, 248, 0.4)';
+        }
+      } else {
+        container.style.display = 'none';
+        if (text) text.innerText = '展開本頁完整報告';
+        if (btn) {
+          btn.style.background = '#38bdf8';
+          btn.style.color = '#000';
+          btn.style.border = 'none';
+        }
+      }
     }
   </script>
 </body>
