@@ -16,7 +16,7 @@
 * 📉 **主腳本代碼精簡**：[`scripts/search_github.py`](scripts/search_github.py) 從 860 行縮減至 **770 行（淨減 90 行，-10.5%）**。
 * 📉 **安裝腳本精簡**：[`install.ps1`](install.ps1) 從 38 行縮減至 **25 行（淨減 13 行，-34.2%）**。
 * 🛡️ **維持 0 依賴**：100% 純 Python 標準函式庫，完全免 `pip install`，開箱即跑。
-* 📄 **詳細工作報告**：完整重構紀錄與量化成效請參見 ➔ **[今日優化總結報告 (PDF/A4印刷排版版)](daily_report_2026_10_08.html)**
+* 📄 **詳細工作報告**：完整重構紀錄與量化成效請參見 ➔ **[今日優化總結報告 (線上直接閱讀)](daily_report_2026_10_08.md)** *(亦可下載 [A4 / PDF 列印版](daily_report_2026_10_08.html))*
 
 ---
 
@@ -50,7 +50,8 @@ github-project-radar/
 │       ├── ponytail-gain/   # /ponytail-gain 基準測試記分板
 │       └── ponytail-help/   # /ponytail-help 模式指令速查
 ├── index.html               # 官方單頁網站 (整合新手指南、開發筆記與互動指令器)
-├── daily_report_2026_10_08.html # 📄 今日優化總結報告 (A4 / PDF 列印版)
+├── daily_report_2026_10_08.md   # 📄 今日優化總結報告 (Markdown 線上直閱版)
+├── daily_report_2026_10_08.html # 🖨️ 今日優化總結報告 (A4 / PDF 列印版)
 ├── SKILL.md                 # Antigravity 技能主說明與工作流引導
 ├── AGENTS.md                # 通用跨 Agent 規則規範 (Claude/Cursor/Windsurf 相容)
 ├── USER_GUIDE.md            # 小白超新手使用指南 (說人話免代碼說明書)
